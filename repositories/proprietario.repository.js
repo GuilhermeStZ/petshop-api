@@ -1,58 +1,88 @@
-import Proprietario from '../models/proprietario.model.js';
+import { connect } from './db.js';
 
-async function insertProprietario(proprietario){
-    try{
-        return await Proprietario.create(proprietario);
+async function insertProprietario(proprietario) {
+    const conn = await connect();
+    try {
+        const sql = 'INSERT INTO proprietarios (nome, telefone) VALUES ($1, $2) RETURNING *';
+        const values = [proprietario.nome, proprietario.telefone];
+
+        const res = await conn.query(sql, values);
+        return res.rows[0];
     }
-    catch(err){
+    catch (err) {
         throw err;
+    }
+    finally {
+        conn.release();
+    }
+
+};
+
+async function updateProprietario(proprietario) {
+    const conn = await connect();
+    try {
+        const sql = 'UPDATE proprietarios set nome = $1, telefone = $2 WHERE proprietario_id = $3 RETURNING *';
+        const values = [proprietario.nome, proprietario.telefone, proprietario.proprietario_id];
+
+        const res = await conn.query(sql, values);
+        return res.rows[0];
+    }
+    catch (err) {
+        throw err;
+    }
+    finally {
+        conn.release();
     }
 };
 
-async function updateProprietario(proprietario){
-    try{
-        await Proprietario.update(proprietario, {
-            where: {
-                proprietarioId: proprietario.ProprietarioId
-            }
-        })
-        return await selectProprietario(proprietario.proprietarioId);
+async function deleteProprietario(proprietario_id) {
+    const conn = await connect();
+    try {
+        const sql = 'DELETE FROM proprietarios WHERE proprietario_id = $1';
+        const values = [proprietario_id];
+
+        const res = await conn.query(sql, values);
+        return "Proprietário excluído!";
     }
-    catch(err){
+    catch (err) {
         throw err;
+    }
+    finally {
+        conn.release();
     }
 };
 
-async function deleteProprietario(proprietario_id){
-    try{
-        await Proprietario.destroy({
-            where:{
-                proprietarioId: proprietario_id
-            }
-        })
-        return "Proprietario excluído!";
+async function selectProprietarios() {
+    const conn = await connect();
+    try {
+        const sql = 'SELECT * FROM proprietarios';
+
+        const res = await conn.query(sql);
+        return res.rows;
     }
-    catch(err){
+    catch (err) {
         throw err;
+    }
+    finally {
+        conn.release();
     }
 };
 
-async function selectProprietarios(){
-    try{
-        return await Proprietario.findAll();
+async function selectProprietario(proprietario_id) {
+    const conn = await connect();
+    try {
+        const sql = 'SELECT * FROM proprietarios WHERE proprietario_id = $1';
+        const value = [proprietario_id];
+
+        const res = await conn.query(sql, value);
+        return res.rows;
     }
-    catch(err){
+    catch (err) {
         throw err;
+    }
+    finally {
+        conn.release();
     }
 };
 
-async function selectProprietario(proprietario_id){
-    try{
-        return await Proprietario.findByPK(proprietario_id);
-    }
-    catch(err){
-        throw err;
-    }
-};
-
-export default {insertProprietario, updateProprietario, deleteProprietario, selectProprietarios, selectProprietario}
+export default { insertProprietario, updateProprietario, deleteProprietario, selectProprietarios, selectProprietario }

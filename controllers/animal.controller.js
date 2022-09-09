@@ -3,7 +3,7 @@ import animalService from '../services/animal.service.js';
 async function createAnimal(req, res, next){
     try {
         const animal = req.body;
-        if(!animal.nome || !animal.tipo || !animal.proprietarioId){
+        if(!animal.nome || !animal.tipo || !animal.proprietario_id){
             throw new Error("Nome, tipo e id do proprietário são obrigatórios!")
         }
         res.send(await animalService.createAnimal(animal));
@@ -16,7 +16,7 @@ async function createAnimal(req, res, next){
 async function updateAnimal(req, res, next){
     try{
         const animal = req.body;
-        if(!animal.animalId || !animal.nome || !animal.tipo || !animal.proprietarioId){
+        if(!animal.animal_id || !animal.nome || !animal.tipo || !animal.proprietario_id){
             throw new Error("Id, nome, tipo e id do proprietário são obrigatórios!");
         }
         res.send(await animalService.updateAnimal(animal));
@@ -29,7 +29,7 @@ async function updateAnimal(req, res, next){
 async function deleteAnimal(req, res, next){
     try{
         const animal_id = req.params.id;
-        res.send(await animalService.deleteAnimal(animalId));
+        res.send(await animalService.deleteAnimal(animal_id));
     }
     catch(err){
         next(err);
@@ -53,8 +53,8 @@ async function getAnimais(req, res, next){
 
 async function getAnimal(req, res, next){
     try{
-        const animalId = req.params.id;
-        res.send(await animalService.getAnimal(animalId));
+        const animal_id = req.params.id;
+        res.send(await animalService.getAnimal(animal_id));
     }
     catch(err){
         next(err);

@@ -16,7 +16,7 @@ async function createProprietario(req, res, next) {
 async function updateProprietario(req, res, next) {
     try {
         const proprietario = req.body;
-        if (!proprietario.proprietarioId || !proprietario.nome || !proprietario.telefone) {
+        if (!proprietario.proprietario_id || !proprietario.nome || !proprietario.telefone) {
             throw new Error("Id, nome e telefone são obrigatórios!");
         };
         res.send(await proprietarioService.updateProprietario(proprietario));
@@ -29,7 +29,7 @@ async function updateProprietario(req, res, next) {
 async function deleteProprietario(req, res, next) {
     try {
         const proprietario_id = req.params.id;
-        res.send(await proprietarioService.deleteProprietario(proprietarioId));
+        res.send(await proprietarioService.deleteProprietario(proprietario_id));
     }
     catch (err) {
         next(err);
@@ -48,7 +48,7 @@ async function getProprietarios(req, res, next) {
 async function getProprietario(req, res, next) {
     try {
         const proprietario_id = req.params.id;
-        res.send(await proprietarioService.getProprietario(proprietarioId));
+        res.send(await proprietarioService.getProprietario(proprietario_id));
     }
     catch (err) {
         next(err);
